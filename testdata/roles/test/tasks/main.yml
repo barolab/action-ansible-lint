@@ -1,0 +1,3 @@
+---
+- name: This is an invalid command
+  command: echo "Invalid"  

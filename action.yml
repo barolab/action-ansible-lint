@@ -1,0 +1,82 @@
+name: 'Run ansible-lint with reviewdog'
+description: ' 🐶 Run ansible-lint with reviewdog on pull requests to improve code review experience.'
+author: 'barolab'
+
+inputs:
+  github_token:
+    description: 'GITHUB_TOKEN'
+    required: true
+  level:
+    description: 'Report level for reviewdog [info,warning,error]'
+    required: false
+    default: 'error'
+  reporter:
+    description: |
+      Reporter of reviewdog command [github-pr-check,github-pr-review].
+      Default is github-pr-check.
+    required: false
+    default: 'github-pr-check'
+  filter_mode:
+    description: |
+      Filtering for the reviewdog command [added,diff_context,file,nofilter].
+      Default is added.
+    required: false
+    default: 'added'
+  fail_on_error:
+    description: |
+      Exit code for reviewdog when errors are found [true,false]
+      Default is `false`.
+    required: false
+    default: 'false'
+  targets:
+    description: |
+      Paths to ansible files (i.e., playbooks, tasks, handlers etc..)
+      or valid Ansible directories according to the Ansible role
+      directory structure.
+    required: true
+  args:
+    description: |
+      Arguments to be passed to the ansible-lint (verbosity & parseable options not supported here)
+
+      Options:
+        -r RULESDIR           specify one or more rules directories using one or
+                              more -r arguments. Any -r flags override the default
+                              rules in ansiblelint/rules, unless -R is also used.
+        -R                    Use default rules in ansiblelint/rules in addition to
+                              any extra
+                              rules directories specified with -r. There is no need
+                              to specify this if no -r flags are used
+        -t TAGS               only check rules whose id/tags match these values
+        -x SKIP_LIST          only check rules whose id/tags do not match these
+                              values
+        --exclude=EXCLUDE_PATHS
+                              path to directories or files to skip. This option is
+                              repeatable.
+        -c C                  Specify configuration file to use. Defaults to ".ansible-lint"
+
+    required: false
+  override_deps:
+    default: ''
+    description: |
+      override_deps allows pinning pip packages and there versions. This allows to pin to a target
+      package version in order to maintain consistency with local development.
+    required: false
+
+outputs:
+  ansible-lint-return-code:
+    description: 'ansible-lint command return code'
+  reviewdog-return-code:
+    description: 'reviewdog command return code'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+  - ${{ inputs.args }}
+  env:
+    TARGETS: ${{ inputs.targets }}
+    OVERRIDE: ${{ inputs.override_deps }}
+
+branding:
+  icon: 'edit'
+  color: 'gray-dark'
