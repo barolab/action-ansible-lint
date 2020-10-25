@@ -1,6 +1,6 @@
 FROM python:3.8-slim
 
-ENV REVIEWDOG_VERSION=v0.10.0
+ENV REVIEWDOG_VERSION=v0.11.0
 
 LABEL "com.github.actions.name"="Run ansible-lint with reviewdog"
 LABEL "com.github.actions.description"=" 🐶 Run ansible-lint with reviewdog on pull requests to improve code review experience."
